@@ -13,9 +13,13 @@
 #++
 
 
-# reset database
+# FIXME: move the following execution within the unit test setup method
+
+
+# reset database and prepare for tests
 database = File.dirname(__FILE__) + '/db/test.sqlite3'
 File.delete(database) if File.file? database
+FileUtils.mkpath(File.dirname(database)) unless File.directory? File.dirname(database)
 
 ActiveRecord::Base.establish_connection(
   :adapter  => 'sqlite3',
