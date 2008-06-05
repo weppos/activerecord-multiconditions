@@ -1,0 +1,9 @@
+= TODO
+
+* improve tests in order to use real queries instead of simple statements
+
+* add tests for different ActiveRecord versions
+
+* ... more
+
+* configure a Redmine installation to store TODO list! :)
