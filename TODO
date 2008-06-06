@@ -7,3 +7,15 @@
 * ... more
 
 * configure a Redmine installation to store TODO list! :)
+
+== m02
+
+* store conditions as an array of condition
+
+* ability to identify a condition by :name ( append_condition(condition, :name), condition? :name, remove_condition :name ... )
+
+== m03
+
+* ability to tag conditions (condition group)
+
+* ability to remove, search, manage condition by tag
