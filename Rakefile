@@ -15,6 +15,9 @@ PKG_FILES   = FileList.new("{lib,test}/**/*.rb") do |fl|
 end
 RUBYFORGE_PROJECT = 'activerecord-multiconditions'
 
+if ENV['SNAPSHOT'].to_i == 1
+  PKG_VERSION << "." << Time.now.utc.strftime("%Y%m%d%H%M%S")
+end
 
 Echoe.new(PKG_NAME, PKG_VERSION) do |p|
   p.author = "Simone Carletti"
