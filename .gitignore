@@ -1,2 +1,5 @@
+*.gemspec
+Manifest
 nbproject
+pkg
 test/db/*.sqlite3
