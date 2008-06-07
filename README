@@ -46,6 +46,12 @@ Stay tuned!
 
 == Usage
 
+First, don't forget to require the library.
+
+    gem 'activerecord-multiconditions'
+    require 'multi_conditions'
+
+
 === Create a new instance
 
 As stated by the Important section above, you first need a valid ActiveRecord model
@@ -126,6 +132,8 @@ See ActiveRecord::Base#find documentation for more conditions examples.
 
 Once loaded, this library become part of ActiveRecord package and
 creates its own namespace at ActiveRecord::Base::MultiConditions.
+
+  require 'multi_conditions'
 
 For various reason, you cannot initialize a new ActiveRecord::Base::MultiConditions
 but you *MUST* initialize a MultiConditions instance from a Model.
