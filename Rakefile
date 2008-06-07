@@ -4,6 +4,7 @@ require 'echoe'
 $LOAD_PATH.unshift(File.dirname(__FILE__) + "/lib")
 require 'multi_conditions'
 
+
 # Common package properties
 PKG_NAME    = ENV['PKG_NAME'] || ActiveRecord::Base::MultiConditions::GEM
 PKG_VERSION = ENV['PKG_VERSION'] || ActiveRecord::Base::MultiConditions::VERSION
@@ -18,6 +19,7 @@ RUBYFORGE_PROJECT = 'activerecord-multiconditions'
 if ENV['SNAPSHOT'].to_i == 1
   PKG_VERSION << "." << Time.now.utc.strftime("%Y%m%d%H%M%S")
 end
+
 
 Echoe.new(PKG_NAME, PKG_VERSION) do |p|
   p.author = "Simone Carletti"
