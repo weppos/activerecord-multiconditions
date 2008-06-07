@@ -75,13 +75,6 @@ module ActiveRecord
     #
     class MultiConditions
 
-      NAME            = 'ActiveRecord::MultiConditions'
-      GEM             = 'activerecord-multiconditions'
-      AUTHOR          = 'Simone Carletti <weppos@weppos.net>'
-      VERSION         = defined?(Version) ? Version::STRING : nil
-      STATUS          = 'alpha'
-      BUILD           = ''.match(/(\d+)/).to_a.first
-
       module Version #:nodoc:
         MAJOR = 0
         MINOR = 0
@@ -89,6 +82,13 @@ module ActiveRecord
 
         STRING = [MAJOR, MINOR, TINY].join('.')
       end
+
+      NAME            = 'ActiveRecord::MultiConditions'
+      GEM             = 'activerecord-multiconditions'
+      AUTHOR          = 'Simone Carletti <weppos@weppos.net>'
+      VERSION         = defined?(Version) ? Version::STRING : nil
+      STATUS          = 'alpha'
+      BUILD           = ''.match(/(\d+)/).to_a.first
 
 
       # Conditions collection
