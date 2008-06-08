@@ -36,12 +36,15 @@ MultiConditions source code is managed via GIT and hosted at GitHub: http://gith
 
 == Download and Installation
 
-MultiConditions is at the beginning of development stage.
-It's stable enough to be used, but at the moment the only way to install it
-is to grab the source code and install it manually.
+Installing ActiveRecord MultiConditions as a GEM is probably the best and easiest way. You must have {RubyGems}[http://rubyforge.org/projects/rubygems/] installed for the following instruction to work:
 
-In a few days it will be packaged as a GEM.
-Stay tuned!
+    $ sudo gem install activerecord-multiconditions
+
+To install the library manually grab the source code from the website, navigate to the root library directory and enter:
+
+    $ sudo ruby setup.rb
+
+If you need the latest development version you can download the source code from the GIT repositories listed above. Beware that the code might not as stable as the official release.
 
 
 == Usage
@@ -51,6 +54,12 @@ First, don't forget to require the library.
     gem 'activerecord-multiconditions'
     require 'multi_conditions'
 
+Now +MultiConditions+ object is automatically available as subclass of any ActiveRecord object.
+
+    class Task < ActiveRecord::Base; end
+    
+    multiconditions = Task::Multiconditions.new
+    # => new instance
 
 === Create a new instance
 
