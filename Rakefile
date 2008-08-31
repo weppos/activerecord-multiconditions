@@ -16,12 +16,15 @@ PKG_FILES   = FileList.new("{lib,test}/**/*.rb") do |fl|
 end
 RUBYFORGE_PROJECT = 'activerecord-multiconditions'
 
+
+# Prepare version number, don't forget about snapshots!
+version = PKG_VERSION
 if ENV['SNAPSHOT'].to_i == 1
-  PKG_VERSION << "." << Time.now.utc.strftime("%Y%m%d%H%M%S")
+  version << "." << Time.now.utc.strftime("%Y%m%d%H%M%S")
 end
 
 
-Echoe.new(PKG_NAME, PKG_VERSION) do |p|
+Echoe.new(PKG_NAME, version) do |p|
   p.author = "Simone Carletti"
   p.email = "weppos@weppos.net"
   p.summary     = PKG_SUMMARY
