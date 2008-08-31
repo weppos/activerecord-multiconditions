@@ -11,7 +11,7 @@ PKG_VERSION = ENV['PKG_VERSION'] || ActiveRecord::Base::MultiConditions::VERSION
 PKG_SUMMARY = "An ActiveRecord plugin for dealing with complex search :conditions."
 PKG_FILES   = FileList.new("{lib,test}/**/*.rb") do |fl|
   fl.exclude 'TODO'
-  fl.include %w(README.rdoc README CHANGELOG MIT-LICENSE)
+  fl.include %w(README.rdoc CHANGELOG.rdoc LICENSE.rdoc)
   fl.include %w(Rakefile setup.rb)
 end
 RUBYFORGE_PROJECT = 'activerecord-multiconditions'
@@ -42,7 +42,7 @@ Echoe.new(PKG_NAME, PKG_VERSION) do |p|
   
   p.project = RUBYFORGE_PROJECT
   
-  p.rdoc_pattern = /^(lib|CHANGELOG|MIT\-LICENSE|README)/
+  p.rdoc_pattern = /^(lib|CHANGELOG.rdoc|LICENSE.rdoc|README.rdoc)/
 end
 
 
