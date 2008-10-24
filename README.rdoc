@@ -11,9 +11,9 @@ of storing illimitate conditions in multiple step.
 
   conditions = MultiConditions.new
   # ... do some elaboration
-  conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo']
+  conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
   # ... other elaboration
-  conditions.append_condition(['name = ?', 'aname']
+  conditions.append_condition(['name = ?', 'aname'])
   
   conditions.to_conditions
   # => "active = true AND query LIKE '%foo' AND name = 'aname'"
