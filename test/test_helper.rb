@@ -13,10 +13,8 @@
 #++
 
 
-# prepend lib folder
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
-# load active_record
 require 'rubygems'
 begin
   gem 'activerecord', '>= 2.0'
@@ -28,4 +26,4 @@ require 'active_record'
 require 'test/unit'
 require 'multi_conditions'
 
-require File.dirname(__FILE__) + '/helper_database'
+require File.dirname(__FILE__) + '/test_database_helper'

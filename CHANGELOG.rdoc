@@ -1,5 +1,17 @@
 = Changelog
 
+
+== master
+
+* FIXED: Change 'Task' to ActiveRecord::Base in method (closes #141).
+
+* CHANGED: MultiConditions.new now requires the first parameter to be the ActiveRecord model class. The new method ActiveRecord::Base#multiconditions is now the preferred way to to initialize a new MultiConditions instance.
+    
+    class Task < ActiveRecord::Base; end;
+    Task::MultiConditions.new(Task) # too verbose
+    Task.multiconditions            # preferred way
+
+
 == Release 0.1.0
 
-  * Initial public release.
+* Initial public release.

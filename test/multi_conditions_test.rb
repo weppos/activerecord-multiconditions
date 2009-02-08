@@ -13,7 +13,7 @@
 #++
 
 
-require File.dirname(__FILE__) + '/../helper'
+require 'test_helper'
 
 
 class MultiConditionsTest < Test::Unit::TestCase
@@ -26,27 +26,23 @@ class MultiConditionsTest < Test::Unit::TestCase
   # =========================================================================
   
   def test_initialize
-    assert_nothing_raised() do
-      assert_kind_of(Task::MultiConditions, ActiveRecord::Base::MultiConditions.new)
-    end
+    assert_nothing_raised { Task.multiconditions }
   end
   
   def test_initialize_with_condition
-    assert_nothing_raised() do
-      Task::MultiConditions.new(:foo => 1)
-      Task::MultiConditions.new('foo = 1')
-      Task::MultiConditions.new(['foo = ?', 1])
+    assert_nothing_raised do
+      Task.multiconditions(:foo => 1)
+      Task.multiconditions('foo = 1')
+      Task.multiconditions(['foo = ?', 1])
     end
   end
   
   def test_initialize_with_block
-    assert_nothing_raised() do
-      obj = Task::MultiConditions.new do |c|
+    assert_nothing_raised do
+      Task.multiconditions do |c|
         c.append_condition(:foo => 1)
         assert_equal(1, c.conditions.length)
       end
-      # ensure initialize always returns self
-      assert_kind_of(ActiveRecord::Base::MultiConditions, obj)
     end
   end
 
@@ -64,14 +60,14 @@ class MultiConditionsTest < Test::Unit::TestCase
   
   def test_single_condition_string
     [{:foo => 'bar'}, "foo = 'bar'", ["foo = ?", 'bar'], ["foo = :foo", {:foo => 'bar'}]].each do |condition|
-      mc = Task::MultiConditions.new(condition)
+      mc = Task.multiconditions(condition)
       assert_match(/"?foo"? = 'bar'$/, mc.to_conditions)
     end
   end
   
   def test_single_condition_fixnum
     [{:foo => 1}, "foo = 1", ["foo = ?", 1], ["foo = :foo", {:foo => 1}]].each do |condition|
-      mc = Task::MultiConditions.new(condition)
+      mc = Task.multiconditions(condition)
       assert_match(/"?foo"? = 1$/, mc.to_conditions)
     end
   end
@@ -80,7 +76,7 @@ class MultiConditionsTest < Test::Unit::TestCase
     first  = [{:foo => 'bar'}, "foo = 'bar'", ["foo = ?", 'bar'], ["foo = :foo", {:foo => 'bar'}]]
     second = [{:baz => 3}, "baz = 3", ["baz = ?", 3], ["baz = :baz", {:baz => 3}]]
     first.size.times do |index|
-      mc = Task::MultiConditions.new
+      mc = Task.multiconditions
       mc.append_condition(first[index])
       mc.append_condition(second[index])
       assert_match(/"?foo"? = 'bar'/, mc.to_conditions)
@@ -92,7 +88,7 @@ class MultiConditionsTest < Test::Unit::TestCase
     first  = [{:foo => 'bar'}, "foo = 'bar'", ["foo = ?", 'bar'], ["foo = :foo", {:foo => 'bar'}]]
     second = ["baz = 3", ["baz = ?", 3], ["baz = :baz", {:baz => 3}], {:baz => 3}]
     first.size.times do |index|
-      mc = Task::MultiConditions.new
+      mc = Task.multiconditions
       mc.append_condition(first[index])
       mc.append_condition(second[index])
       assert_match(/"?foo"? = 'bar'/, mc.to_conditions)
@@ -104,7 +100,7 @@ class MultiConditionsTest < Test::Unit::TestCase
   protected
     
     def instance(condition = nil)
-      Task::MultiConditions.new(condition)
+      Task.multiconditions(condition)
     end
     
     def table_name

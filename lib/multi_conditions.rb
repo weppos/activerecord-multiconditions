@@ -15,6 +15,27 @@
 
 module ActiveRecord
   class Base
+    
+    class << self
+      
+      # Initialize a new +MultiConditions+ instance with +conditions+.
+      #
+      # This is the preferred way to initialize a new +MultiConditions+ instance.
+      # If you want to initialize a MultiConditions youself you must be sure
+      # to pass current Active Record class as the first parameter.
+      #
+      #   Task.multiconditions(['active = ? AND query LIKE ?', true, '%foo'])
+      #   # => Task::MultiConditions
+      # 
+      #   Task.multiconditions(:foo => 'bar')
+      #   # => Task::MultiConditions
+      #
+      def multiconditions(condition = nil, &block)
+        MultiConditions.new(self, condition, &block)
+      end
+      alias :multicondition :multiconditions
+      
+    end
 
     #
     # = ActiveRecord::MultiConditions
@@ -26,52 +47,28 @@ module ActiveRecord
     # nor the basic :condition usage but extends it with the ability
     # of storing illimitate conditions in multiple step.
     # 
-    #   conditions = MultiConditions.new
+    #   conditions = MultiConditions.new(ModelClass)
     #   # ... do some elaboration
-    #   conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo']
+    #   conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
     #   # ... other elaboration
-    #   conditions.append_condition(['name = ?', 'aname']
+    #   conditions.append_condition(['name = ?', 'aname'])
     #   
     #   conditions.to_conditions
     #   # => "active = true AND query LIKE '%foo' AND name = 'aname'"
     # 
-    # The MultiConditions object accepts any type of conditions supported by ActiveRecord,
-    # including Strings, Arrays and Hashes, and merges them alltogether
-    # just before sending the final :condition value to ActiveRecord search method.
+    # == Example Usage
     # 
-    #   conditions = MultiConditions.new
-    #   conditions.append_conditions(:foo => 1, :bar => 2)
-    #   conditions.append_conditions('active = 1')
-    #   conditions.append_conditions(['name LIKE ?', '%foo'])
-    #   
-    #   conditions.to_conditions
-    #   # => 'foo = 1 AND :bar = 2 AND active = 1 AND name LIKE '%foo'
-    #   
-    # See ActiveRecord::Base#find documentation for more conditions examples.
-    # 
-    # 
-    # == Important
-    # 
-    # Once loaded, this library become part of ActiveRecord package and
-    # creates its own namespace at ActiveRecord::Base::MultiConditions.
-    # 
-    # For various reason, you cannot initialize a new ActiveRecord::Base::MultiConditions
-    # but you *MUST* initialize a MultiConditions instance from a Model.
-    # 
-    #   # The wrong way
-    #   # raises Message: <"undefined method `abstract_class?' for Object:Class">
-    #   ActiveRecord::Base::MultiConditions.new
-    #   
-    #   # The right way
-    #   class Model < ActiveRecord::Base
-    #   
-    #     def a_method()
-    #       c = MultiConditions.new
-    #       find(:all, :conditions => c.to_conditions)
-    #     end
-    #   
+    #   class Task < ActiveRecord::base
+    #     # your model
+    #   end
+    #
+    #   conditions = Task.multiconditions(['name = ?', 'aname']) do |m|
+    #     m.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
+    #     m.append_condition(:field => false)
     #   end
     #   
+    #   Task.find(:all, :conditions => conditions.to_conditions)
+    # 
     #
     class MultiConditions
 
@@ -110,31 +107,27 @@ module ActiveRecord
       #     condition.append_condition(:baz => 3)
       #   end
       #
-      def initialize(condition = nil, &block) # :yields: self
+      def initialize(klass, condition = nil, &block) # :yields: self
         @conditions = []
+        @klass = klass
         append_condition(condition)
         yield(self) if block_given?
         self
       end
 
-      # 
       # Appends a new condition at the end of condition list.
-      # 
       def append_condition(condition)
         @conditions.push(prepare_condition(condition))    unless condition.nil?
       end
 
-      # 
       # Prepends a new condition at the beginning of condition list.
-      # 
       def prepend_condition(condition)
         @conditions.unshift(prepare_condition(condition)) unless condition.nil?
       end
 
-      # 
       # Returns a :conditions suitable representation of this object
       # 
-      #   c = MultiConditions.new do |condition|
+      #   c = ModelClass.multiconditions do |condition|
       #     condition.append_condition('foo = 1')
       #     condition.append_condition('bar = 2')
       #     condition.append_condition(:baz => 3)
@@ -158,7 +151,7 @@ module ActiveRecord
         # for now use active record :sanitize_sql_for_conditions
         # instead of dealing with custom methods.
         def prepare_condition(condition)
-          Task.send(:sanitize_sql_for_conditions, condition)
+          @klass.send(:sanitize_sql_for_conditions, condition)
         end
 
     end

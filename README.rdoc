@@ -9,14 +9,23 @@ This plugin doesn't replace ActiveRecord#with_scope method,
 nor the basic :condition usage but extends it with the ability
 of storing illimitate conditions in multiple step.
 
-  conditions = MultiConditions.new
-  # ... do some elaboration
-  conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
-  # ... other elaboration
-  conditions.append_condition(['name = ?', 'aname'])
+  class Task < ActiveRecord::Base; end
   
+  # create a new MultiConditions instance
+  conditions = Task.multicondition
+  
+  # append a condition
+  conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
+  
+  # conditional-append a condition 
+  conditions.append_condition(['name = ?', 'aname']) if admin?
+  
+  # get the final condition list ...
   conditions.to_conditions
   # => "active = true AND query LIKE '%foo' AND name = 'aname'"
+  
+  # ... compatible with ActiveRecord finders
+  Task.find(:all, :conditions => conditions.to_conditions)
 
 
 == Dependencies
@@ -27,11 +36,6 @@ of storing illimitate conditions in multiple step.
 If you want to run the test suite:
 
 * sqlite3-ruby
-
-
-== Source
-
-MultiConditions source code is managed via GIT and hosted at GitHub: http://github.com/weppos/activerecord-multiconditions/.
 
 
 == Download and Installation
@@ -51,27 +55,20 @@ If you need the latest development version you can download the source code from
 
 First, don't forget to require the library.
 
-    gem 'activerecord-multiconditions'
-    require 'multi_conditions'
+    require 'rubygems'
+    require 'activerecord-multiconditions/multiconditions'
 
 Now +MultiConditions+ object is automatically available as subclass of any ActiveRecord object.
 
     class Task < ActiveRecord::Base
-    
       # your Task model
-    
     end
     
-    multiconditions = Task::Multiconditions.new
+    multiconditions = Task.multiconditions(:status => 'active')
     # => new instance
 
-=== Create a new instance
 
-As stated by the Important section above, you first need a valid ActiveRecord model
-to create a MultiConditions instance.
-Because MultiConditions helps you to deal with ActiveRecord queries,
-it's easy to understand why you *MUST* establish a valid database connection 
-and have at least one table (mapped with a Model) to query.
+=== Creating a new instance
 
 If you use ActiveRecord from Rails, this is just a matter of creating a new Model.
 
@@ -85,19 +82,19 @@ You can use it in whatever class method, for example:
     class Task < ActiveRecord::Base
       
       def complex_search()
-        c = MultiConditions.new(:foo => 'bar')
+        c = multiconditions(:foo => 'bar')
         Task.find(:all, c.to_conditions)
       end
 
     end
 
-But you can also create a new instance from an other library, class or model.
+But you can create a new instance from an other library, class or model as well.
 Just remember to initialize MultiConditions from its own namespace.
 
     class Foo
       class << self
         def my_cool_conditions
-          Task::MultiConditions.new(:foo => 1).to_conditions
+          Task::multiconditions(:foo => 1).to_conditions
         end
       end
     end
@@ -107,21 +104,19 @@ Just remember to initialize MultiConditions from its own namespace.
 
 === Appending conditions
 
-You can append new conditions calling
+You can append new conditions with the following methods, 
+passing the conditions you want to append or prepend as parameters.
 
 * #append_condition
 * #prepend_condition
 
-and passing the conditions you want to append or prepend.
 See Condition Types section to lean more about supported objects.
 
-  conditions = MultiConditions.new
   conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo']
   conditions.prepend_condition(['name = ?', 'aname']
   
   conditions.to_conditions
   # => "name = 'aname' AND active = true AND query LIKE '%foo'"
-    
 
 === Condition types
 
@@ -129,7 +124,6 @@ The MultiConditions object accepts any type of conditions supported by ActiveRec
 including Strings, Arrays and Hashes, and merges them alltogether
 just before sending the final :condition value to ActiveRecord search method.
 
-  conditions = MultiConditions.new
   conditions.append_conditions(:foo => 1, :bar => 2)
   conditions.append_conditions('active = 1')
   conditions.append_conditions(['name LIKE ?', '%foo'])
@@ -140,7 +134,6 @@ just before sending the final :condition value to ActiveRecord search method.
 See ActiveRecord::Base#find documentation for more conditions examples.
 
 
-
 == Important
 
 Once loaded, this library become part of ActiveRecord package and
@@ -149,7 +142,8 @@ creates its own namespace at ActiveRecord::Base::MultiConditions.
   require 'multi_conditions'
 
 For various reason, you cannot initialize a new ActiveRecord::Base::MultiConditions
-but you *MUST* initialize a MultiConditions instance from a Model.
+but you *MUST* initialize a MultiConditions instance from a Model or 
+using the ActiveRecord::Base#multiconditions method (preferred way).
 
   # The wrong way
   # raises Message: <"undefined method `abstract_class?' for Object:Class">
@@ -157,13 +151,16 @@ but you *MUST* initialize a MultiConditions instance from a Model.
   
   # The right way
   class Model < ActiveRecord::Base
-  
     def a_method()
-      c = MultiConditions.new
+      c = MultiConditions.new(Model, ['foo = ?', 'bar'])
       find(:all, :conditions => c.to_conditions)
     end
-  
   end
+  
+  # The best way
+  class Model < ActiveRecord::Base
+  end
+  conditions = Model.multiconditions(['foo = ?', 'bar'])
 
 
 == Author
