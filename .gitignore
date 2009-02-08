@@ -1,5 +1,7 @@
-*.gemspec
-Manifest
+.DS_Store
 nbproject
+.idea
 pkg
-test/db/*.sqlite3
+doc
+coverage
+Manifest
