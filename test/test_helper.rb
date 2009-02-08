@@ -16,12 +16,6 @@
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'rubygems'
-begin
-  gem 'activerecord', '>= 2.0'
-rescue Gem::LoadError => e
-  abort e.message
-end
-
 require 'active_record'
 require 'test/unit'
 require 'multi_conditions'

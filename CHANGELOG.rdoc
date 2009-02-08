@@ -15,6 +15,8 @@
     Task::MultiConditions.new(Task) # too verbose
     Task.multiconditions            # preferred way
 
+* CHANGED: Reorganized library structure. This package now declares a MultiConditions module that acts as a mixin for the ActiveRecord::Base class. Having MultiCondition class declared within a MultiConditions module is not really a perfect solution but - for now - I don't want to break BC renaming the GEM or the internal class. 
+
 
 == Release 0.1.0
 

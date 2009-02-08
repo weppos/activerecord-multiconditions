@@ -7,8 +7,8 @@ require 'multi_conditions'
 
 
 # Common package properties
-PKG_NAME    = ENV['PKG_NAME']    || ActiveRecord::Base::MultiConditions::GEM
-PKG_VERSION = ENV['PKG_VERSION'] || ActiveRecord::Base::MultiConditions::VERSION
+PKG_NAME    = ENV['PKG_NAME']    || MultiConditions::GEM
+PKG_VERSION = ENV['PKG_VERSION'] || MultiConditions::VERSION
 PKG_SUMMARY = "An ActiveRecord plugin for dealing with complex search :conditions."
 PKG_FILES = FileList.new("{lib,test}/**/*.rb") do |fl|
   fl.include %w(README.rdoc CHANGELOG.rdoc LICENSE.rdoc)

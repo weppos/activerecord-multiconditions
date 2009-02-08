@@ -13,80 +13,91 @@
 #++
 
 
-module ActiveRecord
-  class Base
+require 'rubygems'
+require 'active_record'
+
+
+#
+# = ActiveRecord::MultiConditions
+# 
+# MultiConditions is a simple ActiveRecord plugin for storing ActiveRecord 
+# query and make complex queries painless.
+# 
+# This plugin doesn't replace ActiveRecord#with_scope method,
+# nor the basic :condition usage but extends it with the ability
+# of storing illimitate conditions in multiple step.
+# 
+#   conditions = MultiConditions.new(ModelClass)
+#   # ... do some elaboration
+#   conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
+#   # ... other elaboration
+#   conditions.append_condition(['name = ?', 'aname'])
+#   
+#   conditions.to_conditions
+#   # => "active = true AND query LIKE '%foo' AND name = 'aname'"
+# 
+# == Example Usage
+# 
+#   class Task < ActiveRecord::base
+#     # your model
+#   end
+#
+#   conditions = Task.multiconditions(['name = ?', 'aname']) do |m|
+#     m.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
+#     m.append_condition(:field => false)
+#   end
+#   
+#   Task.find(:all, :conditions => conditions.to_conditions)
+# 
+#
+module MultiConditions
+
+  module Version #:nodoc:
+    MAJOR = 0
+    MINOR = 1
+    TINY = 0
+
+    STRING = [MAJOR, MINOR, TINY].join('.')
+  end
+
+  NAME            = 'ActiveRecord::MultiConditions'
+  GEM             = 'activerecord-multiconditions'
+  AUTHOR          = 'Simone Carletti <weppos@weppos.net>'
+  
+  VERSION         = Version::STRING
+  STATUS          = 'alpha'
+  BUILD           = ''.match(/(\d+)/).to_a.first
+  
+  
+  def self.included(base)
+    base.extend         ClassMethods
+    base.send :include, InstanceMethods
+  end
+  
+  module ClassMethods
     
-    class << self
-      
-      # Initialize a new +MultiConditions+ instance with +conditions+.
-      #
-      # This is the preferred way to initialize a new +MultiConditions+ instance.
-      # If you want to initialize a MultiConditions youself you must be sure
-      # to pass current Active Record class as the first parameter.
-      #
-      #   Task.multiconditions(['active = ? AND query LIKE ?', true, '%foo'])
-      #   # => Task::MultiConditions
-      # 
-      #   Task.multiconditions(:foo => 'bar')
-      #   # => Task::MultiConditions
-      #
-      def multiconditions(condition = nil, &block)
-        MultiConditions.new(self, condition, &block)
-      end
-      alias :multicondition :multiconditions
-      
+    # Initialize a new +MultiConditions+ instance with +conditions+.
+    #
+    # This is the preferred way to initialize a new +MultiConditions+ instance.
+    # If you want to initialize a MultiConditions youself you must be sure
+    # to pass current Active Record class as the first parameter.
+    #
+    #   Task.multiconditions(['active = ? AND query LIKE ?', true, '%foo'])
+    #   # => Task::MultiConditions
+    # 
+    #   Task.multiconditions(:foo => 'bar')
+    #   # => Task::MultiConditions
+    #
+    def multiconditions(condition = nil, &block)
+      InstanceMethods::MultiConditions.new(self, condition, &block)
     end
+    alias :multicondition :multiconditions
+    
+  end
+  
+  module InstanceMethods
 
-    #
-    # = ActiveRecord::MultiConditions
-    # 
-    # MultiConditions is a simple ActiveRecord plugin for storing ActiveRecord 
-    # query and make complex queries painless.
-    # 
-    # This plugin doesn't replace ActiveRecord#with_scope method,
-    # nor the basic :condition usage but extends it with the ability
-    # of storing illimitate conditions in multiple step.
-    # 
-    #   conditions = MultiConditions.new(ModelClass)
-    #   # ... do some elaboration
-    #   conditions.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
-    #   # ... other elaboration
-    #   conditions.append_condition(['name = ?', 'aname'])
-    #   
-    #   conditions.to_conditions
-    #   # => "active = true AND query LIKE '%foo' AND name = 'aname'"
-    # 
-    # == Example Usage
-    # 
-    #   class Task < ActiveRecord::base
-    #     # your model
-    #   end
-    #
-    #   conditions = Task.multiconditions(['name = ?', 'aname']) do |m|
-    #     m.append_condition(['active = ? AND query LIKE ?', true, '%foo'])
-    #     m.append_condition(:field => false)
-    #   end
-    #   
-    #   Task.find(:all, :conditions => conditions.to_conditions)
-    # 
-    #
     class MultiConditions
-
-      module Version #:nodoc:
-        MAJOR = 0
-        MINOR = 1
-        TINY = 0
-
-        STRING = [MAJOR, MINOR, TINY].join('.')
-      end
-
-      NAME            = 'ActiveRecord::MultiConditions'
-      GEM             = 'activerecord-multiconditions'
-      AUTHOR          = 'Simone Carletti <weppos@weppos.net>'
-      VERSION         = defined?(Version) ? Version::STRING : nil
-      STATUS          = 'alpha'
-      BUILD           = ''.match(/(\d+)/).to_a.first
-
 
       # Conditions collection
       attr_reader :conditions
@@ -155,6 +166,9 @@ module ActiveRecord
         end
 
     end
-
   end
+end
+
+class ActiveRecord::Base
+  include MultiConditions
 end
