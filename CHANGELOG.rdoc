@@ -5,6 +5,10 @@
 
 * FIXED: Change 'Task' to ActiveRecord::Base in method (closes #141).
 
+* ADDED: Added activerecord-multiconditions.rb file to enable RubyGems single-line inclusion.
+
+    require 'activerecord-multiconditions'
+
 * CHANGED: MultiConditions.new now requires the first parameter to be the ActiveRecord model class. The new method ActiveRecord::Base#multiconditions is now the preferred way to to initialize a new MultiConditions instance.
     
     class Task < ActiveRecord::Base; end;

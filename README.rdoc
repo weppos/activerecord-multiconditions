@@ -56,7 +56,7 @@ If you need the latest development version you can download the source code from
 First, don't forget to require the library.
 
     require 'rubygems'
-    require 'activerecord-multiconditions/multiconditions'
+    require 'activerecord-multiconditions'
 
 Now +MultiConditions+ object is automatically available as subclass of any ActiveRecord object.
 
