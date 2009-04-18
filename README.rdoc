@@ -3,6 +3,12 @@
 MultiConditions is a simple ActiveRecord plugin for storing ActiveRecord find conditions and make complex queries painless.
 
 
+*DISCONTINUED PROJECT*: as of April 2009, I decided to discontinue the development of this library to concentrate my efforts on other projects.
+
+If you are looking for a good alternative, I encourage you to have a look at Ben Johnson's {SearchLogic}[http://searchlogic.rubyforge.org/] library.
+SearchLogic provides all ActiveRecord::Multiconditions features along with many other cool stuff.
+
+
 == Overview
 
 This plugin doesn't replace ActiveRecord#with_scope method,
@@ -31,7 +37,7 @@ of storing illimitate conditions in multiple step.
 == Dependencies
 
 * Ruby 1.8.6
-* ActiveRecord 2.0 (or greater)
+* ActiveRecord >= 2.0 (tested up to AR 2.3)
 
 If you want to run the test suite:
 
