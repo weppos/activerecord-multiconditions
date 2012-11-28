@@ -1,13 +1,16 @@
+= Discontinued
+
+As of April 2009, I decided to discontinue the development of this library to concentrate my efforts on other projects.
+
+If you are looking for a good alternative, I encourage you to have a look at Ben Johnson's SearchLogic library.
+SearchLogic provides all ActiveRecord::Multiconditions features along with many other cool stuff.
+
+Now back to your original README content...
+
+
 = ActiveRecord::MultiConditions
 
 MultiConditions is a simple ActiveRecord plugin for storing ActiveRecord find conditions and make complex queries painless.
-
-
-*DISCONTINUED PROJECT*: as of April 2009, I decided to discontinue the development of this library to concentrate my efforts on other projects.
-
-If you are looking for a good alternative, I encourage you to have a look at Ben Johnson's {SearchLogic}[http://searchlogic.rubyforge.org/] library.
-SearchLogic provides all ActiveRecord::Multiconditions features along with many other cool stuff.
-
 
 == Overview
 
